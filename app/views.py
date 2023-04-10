@@ -8,9 +8,11 @@ This file creates your application.
 import os
 
 from app import app
-from flask import jsonify, request
+from flask import jsonify, render_template, request
 from werkzeug.utils import secure_filename
 from .models import Movie
+from .forms import MovieForm
+from flask_wtf.csrf import generate_csrf
 
 from . import db
 
@@ -25,20 +27,23 @@ def index():
 
 @app.route('/api/v1/movies', methods=['POST'])
 def movies():
-    form = Movie(request.form)
+
+    form = MovieForm()
     if form.validate():
-        # Get the movie data from the form
-        title = form.title.data
-        description = form.description.data
-        poster = form.poster.data
+        title  = request.form['title']
+        description  = request.form['description']
+        poster = request.files['poster']
+  
+        
+    
 
         # Save the movie poster to the uploads folder
         filename = secure_filename(poster.filename)
-        #poster.save('uploads/' + filename)
-        
         poster.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        
+       
         # Save the movie to the database
-        movie = Movie(title=title, description=description, poster=filename)
+        movie = Movie(title, description, poster = filename)
         db.session.add(movie)
         db.session.commit()
 
@@ -54,6 +59,7 @@ def movies():
         # Return a list of errors in JSON format
         errors = form_errors(form)
         response = {'errors': errors}
+        print("hey")
         return jsonify(response), 400
 
 
@@ -63,7 +69,9 @@ def movies():
 
 
 
-
+@app.route('/api/v1/csrf-token', methods=['GET'])
+def get_csrf():
+ return jsonify({'csrf_token': generate_csrf()})
 
 
 
@@ -117,4 +125,5 @@ def add_header(response):
 @app.errorhandler(404)
 def page_not_found(error):
     """Custom 404 page."""
-    return render_template('404.html'), 404
+    #return render_template('404.html'), 404
+    return "error"

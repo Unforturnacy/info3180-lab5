@@ -16,11 +16,10 @@ class Movie(db.Model):
     title = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text, nullable=False)
     poster = db.Column(db.String, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
 
-    def __init__(self, id, title, description, poster, created_at):
-        self.id = id
+    def __init__(self, title, description, poster):
         self.title = title
         self.description = description
         self.poster = poster
-        self.created_at = created_at
+        self.created_at = datetime.now()
