@@ -8,7 +8,7 @@ This file creates your application.
 import os
 
 from app import app
-from flask import jsonify, render_template, request
+from flask import jsonify, render_template, request, send_from_directory
 from werkzeug.utils import secure_filename
 from .models import Movie
 from .forms import MovieForm
@@ -34,9 +34,6 @@ def movies():
         description  = request.form['description']
         poster = request.files['poster']
   
-        
-    
-
         # Save the movie poster to the uploads folder
         filename = secure_filename(poster.filename)
         poster.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -54,7 +51,7 @@ def movies():
             'poster': movie.poster,
             'description': movie.description
         }
-        return jsonify(response), 200
+        return jsonify(response)
     else:
         # Return a list of errors in JSON format
         errors = form_errors(form)
@@ -65,17 +62,29 @@ def movies():
 
 
 
-
-
-
-
 @app.route('/api/v1/csrf-token', methods=['GET'])
 def get_csrf():
  return jsonify({'csrf_token': generate_csrf()})
 
 
+@app.route('/api/v1/movies', methods=['GET'])
+def get_movies():
+    movies = Movie.query.all()
+    movie_list = []
+    for movie in movies:
+        movie_data = {
+            'id': movie.id,
+            'title': movie.title,
+            'description': movie.description,
+            'poster': "/api/v1/posters/"+movie.poster
+        
+        }
+        movie_list.append(movie_data)
+    return jsonify({'movies': movie_list})
 
-
+@app.route('/api/v1/posters/<filename>', methods=['GET'])
+def get_image(filename):
+    return send_from_directory(os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER']), filename)
 
 
 
