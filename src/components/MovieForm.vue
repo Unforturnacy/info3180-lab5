@@ -3,16 +3,16 @@
         <form action="POST" @submit.prevent="saveMovie" id = "movieForm" enctype="multipart/form-data">
       
               
-                <label for="title" class="form-label">Movie Title</label><br>
-                <input type="text" name="title" class="formcontrol" />
+                <label for="title" class="movie-title">Movie Title</label><br>
+                <input type="text" name="title" class="movie-input" />
                 <br>
-                <label for="description" class="form-label">Movie Description</label><br>
-                <input type="text" name="description" class="formcontrol" />
+                <label for="description" class="movie-title">Movie Description</label><br>
+                <input type="text" name="description" class="description-input" />
                 <br>
-                <label for="poster"  class="form-label">Movie Image</label><br>
-                <input type="file" name="poster" id = "image-file" class="formcontrol" />
+                <label for="poster"  class="movie-title">Movie Image</label><br>
+                <input type="file" name="poster" id = "image-file" class="upload-button" />
                 <br><br>
-                <input type="submit" value="Submit">
+                <input type="submit" value="Submit" class ="submit-button">
            
         </form>
       
@@ -60,4 +60,61 @@ let csrf_token = ref("");
     csrf_token.value = data.csrf_token;
  })
  }
-  </script>
+
+
+</script>
+ <style>
+form {
+ padding:10px;
+ margin:20px;
+}
+
+.movie-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.movie-input {
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  width: 25%;
+  margin-bottom: 20px;
+}
+
+
+.description-input {
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  width: 45%;
+  margin-bottom: 20px;
+}
+
+
+.upload-button {
+  padding: 10px;
+  background-color: DodgerBlue;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+
+
+.submit-button {
+  padding: 10px;
+  background-color: #008CBA;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+</style>
